@@ -1,17 +1,17 @@
 #include <iostream>
-#include "World.h"
+#include "Monde.h"
 
 using namespace std;
 
-void World::reproduction() {
-    cout << "Sélection des individus pour la reproduction/mutation." << endl;
+void Monde::reproduction() {
+    cout << " -- Sélection des individus pour la reproduction/mutation." << endl;
 }
 
-void World::mort() {
-    cout << "Sélection des individus pour la mort." << endl;
+void Monde::mort() {
+    cout << " -- Sélection des individus pour la mort." << endl;
 }
 
-void World::affichage(bool verbose) {
+void Monde::affichage(bool verbose) {
     cout << "Meilleure distance à l'optimum : " << meilleureDistance() << endl
          << "Distance moyenne à l'optimum : " << distanceMoyenne() << endl
          << individus.size() << " individus : " << endl;
@@ -21,7 +21,7 @@ void World::affichage(bool verbose) {
             individu->affichage();
 }
 
-double World::meilleureDistance() {
+double Monde::meilleureDistance() {
     if (!individus.empty()) {
         double distance = individus.at(0)->distanceToOptimal();
 
@@ -36,7 +36,7 @@ double World::meilleureDistance() {
     return -1;
 }
 
-double World::distanceMoyenne() {
+double Monde::distanceMoyenne() {
     if (!individus.empty()) {
         double distance = 0.0;
 
@@ -50,12 +50,12 @@ double World::distanceMoyenne() {
     return -1;
 }
 
-World::World(int nbInitial, int tailleInitiale) {
+Monde::Monde(int nbInitial, int tailleInitiale) {
     for (int i = 0; i < nbInitial; i++)
         individus.push_back(new Individu(tailleInitiale));
 }
 
-World::~World() {
+Monde::~Monde() {
     for (auto individu : individus)
         delete individu;
 }

@@ -6,11 +6,11 @@
 
 using namespace std;
 
-class World {
+class Monde {
 public:
-    explicit World(int nbInitial, int tailleInitiale);
+    explicit Monde(int nbInitial, int tailleInitiale);
 
-    virtual ~World();
+    virtual ~Monde();
 
     void reproduction();
 

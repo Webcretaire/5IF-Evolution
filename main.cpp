@@ -1,5 +1,5 @@
 #include <iostream>
-#include "World.h"
+#include "Monde.h"
 #include <random>
 #include <unistd.h>
 
@@ -58,7 +58,7 @@ int main(int argc, char *argv[]) {
 
     cout << "=== > Monde initial : " << endl << endl;
 
-    auto *world = new World(nombreInitial, tailleInitiale);
+    auto *world = new Monde(nombreInitial, tailleInitiale);
 
     world->affichage();
 
