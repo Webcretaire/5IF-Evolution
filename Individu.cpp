@@ -9,7 +9,7 @@ double Individu::distanceToOptimal() {
     double halfDna = dna.size() / 2.0;
 
     for (int i = 0; i < halfDna; ++i)
-        if (dna.at(i) != dna.at(dna.size() - i - 1))
+        if (dna[i] != dna[dna.size() - i - 1])
             ++distance;
 
     return distance / halfDna; // Devrait être entre 0 et 1
@@ -25,4 +25,12 @@ void Individu::affichage() {
 Individu::Individu(int tailleInitiale) {
     for (int i = 0; i < tailleInitiale; i++)
         dna.push_back(rand() % 2 ? '1' : '0');
+}
+
+void Individu::mutation() {
+    if (rand() % 2) {
+        // Effectue un switch sur un bit aléatoire avec une probabilité de 50%
+        int index = rand() % dna.size();
+        dna[index] = dna[index] == '1' ? '0' : '1';
+    }
 }

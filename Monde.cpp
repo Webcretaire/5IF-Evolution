@@ -4,11 +4,16 @@
 using namespace std;
 
 void Monde::reproduction() {
-    cout << " -- Sélection des individus pour la reproduction/mutation." << endl;
+    // Le meilleur est copié
+    auto *nouveau = new Individu(*individus[meilleurIndividu()]);
+    nouveau->mutation();
+    individus.push_back(nouveau);
 }
 
 void Monde::mort() {
-    cout << " -- Sélection des individus pour la mort." << endl;
+    int index = pireIndividu();
+    delete individus[index];
+    individus.erase(individus.begin() + index);
 }
 
 void Monde::affichage(bool verbose) {
@@ -23,7 +28,7 @@ void Monde::affichage(bool verbose) {
 
 double Monde::meilleureDistance() {
     if (!individus.empty()) {
-        double distance = individus.at(0)->distanceToOptimal();
+        double distance = individus[0]->distanceToOptimal();
 
         for (auto individu: individus) {
             double temp = individu->distanceToOptimal();
@@ -58,6 +63,44 @@ Monde::Monde(int nbInitial, int tailleInitiale) {
 Monde::~Monde() {
     for (auto individu : individus)
         delete individu;
+}
+
+int Monde::meilleurIndividu() {
+    if (!individus.empty()) {
+        double distance = individus[0]->distanceToOptimal();
+        int individu = 0;
+
+        for (int i = 0; i < individus.size(); ++i) {
+            double temp = individus[i]->distanceToOptimal();
+            if (temp < distance) {
+                distance = temp;
+                individu = i;
+            }
+        }
+
+        return individu;
+    }
+
+    return -1;
+}
+
+int Monde::pireIndividu() {
+    if (!individus.empty()) {
+        double distance = individus[0]->distanceToOptimal();
+        int individu = 0;
+
+        for (int i = 0; i < individus.size(); ++i) {
+            double temp = individus[i]->distanceToOptimal();
+            if (temp > distance) {
+                distance = temp;
+                individu = i;
+            }
+        }
+
+        return individu;
+    }
+
+    return -1;
 }
 
 

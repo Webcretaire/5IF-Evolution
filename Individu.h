@@ -13,6 +13,8 @@ public:
 
     void affichage();
 
+    void mutation();
+
 private:
     vector<char> dna;
 

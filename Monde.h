@@ -24,6 +24,10 @@ private:
     double meilleureDistance();
 
     double distanceMoyenne();
+
+    int meilleurIndividu();
+
+    int pireIndividu();
 };
 
 
