@@ -1,0 +1,7 @@
+/.idea/
+/cmake-build-debug/
+/CMakeCache.txt
+/CMakeFiles/
+/5if_evolution_beslon.cbp
+/out
+/cmake_install.cmake
