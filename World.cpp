@@ -4,20 +4,21 @@
 using namespace std;
 
 void World::reproduction() {
-
+    cout << "Sélection des individus pour la reproduction/mutation." << endl;
 }
 
 void World::mort() {
-
+    cout << "Sélection des individus pour la mort." << endl;
 }
 
-void World::affichage() {
+void World::affichage(bool verbose) {
     cout << "Meilleure distance à l'optimum : " << meilleureDistance() << endl
          << "Distance moyenne à l'optimum : " << distanceMoyenne() << endl
          << individus.size() << " individus : " << endl;
 
-    for (auto individu: individus)
-        individu->affichage();
+    if (verbose)
+        for (auto individu: individus)
+            individu->affichage();
 }
 
 double World::meilleureDistance() {

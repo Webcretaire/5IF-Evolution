@@ -5,6 +5,17 @@
 
 using namespace std;
 
+/**
+ * Point d'entrée du programme
+ *
+ * Paramètres disponibles :
+ * * -n xxx : xxx individus seront initialement créés
+ * * -t xxx : les individus intialement créés auront un ADN de taille xxx
+ * * -i xxx : xxx itérations seront exécutées sur le monde généré
+ * @param argc
+ * @param argv
+ * @return
+ */
 int main(int argc, char *argv[]) {
 
     /*
@@ -17,14 +28,18 @@ int main(int argc, char *argv[]) {
 
     int tailleInitiale = 0;
     int nombreInitial = 0;
+    int iterations = 0;
 
-    while ((opt = getopt(argc, argv, ":n:t:")) != -1) {
+    while ((opt = getopt(argc, argv, ":n:t:i:")) != -1) {
         switch (opt) {
-            case 'n':
+            case 'n': // Nombre d'individus à créer
                 nombreInitial = stoi(optarg);
                 break;
-            case 't':
+            case 't': // Taille des individus (ADN)
                 tailleInitiale = stoi(optarg);
+                break;
+            case 'i': // Nombre d'itérations à exécuter (optionnel)
+                iterations = stoi(optarg);
                 break;
             default:
                 break;
@@ -33,7 +48,7 @@ int main(int argc, char *argv[]) {
 
     if (!tailleInitiale || !nombreInitial) {
         cout << "Les paramètres n et t doivent être spécifiés (nombre initial et taille initiale)" << endl
-             << "Exemple : ./out -n 10 -t 20" << endl;
+             << "Exemple : ./out -n 10 -t 20 [-i 5]" << endl;
         return 1;
     }
 
@@ -41,19 +56,29 @@ int main(int argc, char *argv[]) {
      * Création du monde
      */
 
-    cout << "Creating world" << endl;
-
-    /*
-     * Exécution pas à pas
-     */
+    cout << "=== > Monde initial : " << endl << endl;
 
     auto *world = new World(nombreInitial, tailleInitiale);
 
     world->affichage();
 
     /*
+     * Exécution pas à pas
+     */
+
+    for (int i = 0; i < iterations; ++i) {
+        cout << endl << "=== > Itération " << i << endl << endl;
+        world->reproduction();
+        world->mort();
+        world->affichage(false);
+    }
+
+    /*
      * Nettoyage
      */
+
+    cout << endl << "=== > Monde final : " << endl << endl;
+    world->affichage();
 
     delete world;
 

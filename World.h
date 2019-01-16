@@ -16,7 +16,7 @@ public:
 
     void mort();
 
-    void affichage();
+    void affichage(bool verbose = true);
 
 private:
     vector<Individu *> individus;
