@@ -2,21 +2,23 @@
 #define INC_5IF_EVOLUTION_BESLON_INDIVIDU_H
 
 #include <vector>
+#include <random>
+#include <cstdint>
 
 using namespace std;
 
 class Individu {
 public:
-    explicit Individu(int tailleInitiale);
+    explicit Individu(int tailleInitiale, mt19937 &generateurAleatoire);
 
     double distanceToOptimal();
 
     void affichage();
 
-    void mutation();
+    void mutation(mt19937 &generateurAleatoire);
 
 private:
-    vector<char> dna;
+    vector<int8_t> dna;
 
 };
 

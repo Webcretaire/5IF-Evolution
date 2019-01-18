@@ -2,13 +2,14 @@
 #define INC_5IF_EVOLUTION_BESLON_WORLD_H
 
 #include <vector>
+#include <random>
 #include "Individu.h"
 
 using namespace std;
 
 class Monde {
 public:
-    explicit Monde(int nbInitial, int tailleInitiale);
+    explicit Monde(int nbInitial, int tailleInitiale, double taux, unsigned long graine);
 
     virtual ~Monde();
 
@@ -21,6 +22,10 @@ public:
 private:
     vector<Individu *> individus;
 
+    mt19937 generateurAleatoire;
+
+    double tauxMutation;
+
     double meilleureDistance();
 
     double distanceMoyenne();
@@ -28,6 +33,10 @@ private:
     int meilleurIndividu();
 
     int pireIndividu();
+
+    Individu selectionReproduction();
+
+    int selectionMort();
 };
 
 

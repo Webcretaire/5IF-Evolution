@@ -1,7 +1,8 @@
 #include <iostream>
 #include "Monde.h"
-#include <random>
 #include <unistd.h>
+
+#define USAGE "./out -n ENTIER -t ENTIER [-i ENTIER] [-m REEL]"
 
 using namespace std;
 
@@ -22,15 +23,15 @@ int main(int argc, char *argv[]) {
      * Gestion des paramètres
      */
 
-    srand(time(nullptr)); // use current time as seed for random generator
-
-    int opt;
-
+//Declaration des paramètres de simulation
     int tailleInitiale = 0;
     int nombreInitial = 0;
     int iterations = 0;
+    double tauxMutation = 0.5;
+    auto graine = static_cast<unsigned long>(time(nullptr));
 
-    while ((opt = getopt(argc, argv, ":n:t:i:")) != -1) {
+    int opt;
+    while ((opt = getopt(argc, argv, "n:t:i:m:")) != -1) {
         switch (opt) {
             case 'n': // Nombre d'individus à créer
                 nombreInitial = stoi(optarg);
@@ -41,14 +42,22 @@ int main(int argc, char *argv[]) {
             case 'i': // Nombre d'itérations à exécuter (optionnel)
                 iterations = stoi(optarg);
                 break;
-            default:
+            case 'm': // taux de mutation (optionnel)
+                tauxMutation = stod(optarg);
+                if(tauxMutation < 0 || tauxMutation > 1) {
+                    cerr << "Le taux de mutation doit être entre 0 et 1" << endl;
+                    exit(EXIT_FAILURE);
+                }
                 break;
+            default:
+                cerr << USAGE << endl;
+                exit(EXIT_FAILURE);
         }
     }
 
     if (!tailleInitiale || !nombreInitial) {
         cout << "Les paramètres n et t doivent être spécifiés (nombre initial et taille initiale)" << endl
-             << "Exemple : ./out -n 10 -t 20 [-i 5]" << endl;
+             << "usage : " USAGE << endl;
         return 1;
     }
 
@@ -58,7 +67,7 @@ int main(int argc, char *argv[]) {
 
     cout << "=== > Monde initial : " << endl << endl;
 
-    auto *world = new Monde(nombreInitial, tailleInitiale);
+    auto *world = new Monde(nombreInitial, tailleInitiale, tauxMutation, graine);
 
     world->affichage();
 

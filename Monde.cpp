@@ -4,14 +4,18 @@
 using namespace std;
 
 void Monde::reproduction() {
-    // Le meilleur est copié
-    auto *nouveau = new Individu(*individus[meilleurIndividu()]);
-    nouveau->mutation();
+    bernoulli_distribution bernoulli(tauxMutation);
+    //On selection un individu pour se reproduire
+    auto *nouveau = new Individu(selectionReproduction());
+
+    if (bernoulli(generateurAleatoire))
+        nouveau->mutation(generateurAleatoire);
+
     individus.push_back(nouveau);
 }
 
 void Monde::mort() {
-    int index = pireIndividu();
+    int index = selectionMort();
     delete individus[index];
     individus.erase(individus.begin() + index);
 }
@@ -55,9 +59,11 @@ double Monde::distanceMoyenne() {
     return -1;
 }
 
-Monde::Monde(int nbInitial, int tailleInitiale) {
+Monde::Monde(int nbInitial, int tailleInitiale, double taux, unsigned long graine)
+        : tauxMutation(taux) {
+    generateurAleatoire.seed(graine);
     for (int i = 0; i < nbInitial; i++)
-        individus.push_back(new Individu(tailleInitiale));
+        individus.push_back(new Individu(tailleInitiale, generateurAleatoire));
 }
 
 Monde::~Monde() {
@@ -101,6 +107,14 @@ int Monde::pireIndividu() {
     }
 
     return -1;
+}
+
+Individu Monde::selectionReproduction() {
+    return *individus[meilleurIndividu()];
+}
+
+int Monde::selectionMort() {
+    return pireIndividu();
 }
 
 

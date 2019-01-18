@@ -1,5 +1,4 @@
 #include "Individu.h"
-#include <random>
 #include <iostream>
 
 using namespace std;
@@ -9,7 +8,7 @@ double Individu::distanceToOptimal() {
     double halfDna = dna.size() / 2.0;
 
     for (int i = 0; i < halfDna; ++i)
-        if (dna[i] != dna[dna.size() - i - 1])
+        if ((bool)dna[i] != (bool)dna[dna.size() - i - 1])
             ++distance;
 
     return distance / halfDna; // Devrait être entre 0 et 1
@@ -17,20 +16,19 @@ double Individu::distanceToOptimal() {
 
 void Individu::affichage() {
     for (auto c : dna)
-        cout << c;
+        cout << (c ? '1' : '0');
 
     cout << endl;
 }
 
-Individu::Individu(int tailleInitiale) {
+Individu::Individu(int tailleInitiale, mt19937 &generateurAleatoire) {
+    uniform_int_distribution<int8_t> generateurBernoulli(0, 1);
     for (int i = 0; i < tailleInitiale; i++)
-        dna.push_back(rand() % 2 ? '1' : '0');
+        dna.push_back(generateurBernoulli(generateurAleatoire));
 }
 
-void Individu::mutation() {
-    if (rand() % 2) {
-        // Effectue un switch sur un bit aléatoire avec une probabilité de 50%
-        int index = rand() % dna.size();
-        dna[index] = dna[index] == '1' ? '0' : '1';
-    }
+void Individu::mutation(mt19937 &generateurAleatoire) {
+    uniform_int_distribution<> uniforme(0, (int)dna.size()-1);
+    int index = uniforme(generateurAleatoire);
+    dna[index] = !dna[index];
 }
