@@ -4,9 +4,12 @@
 using namespace std;
 
 void Monde::reproduction() {
+    nombreReproduction++;
     bernoulli_distribution bernoulli(tauxMutation);
     //On selection un individu pour se reproduire
-    auto *nouveau = new Individu(selectionReproduction());
+    auto elu = selectionReproduction();
+    elu->vieillir();
+    auto *nouveau = new Individu(*elu);
 
     if (bernoulli(generateurAleatoire))
         nouveau->mutation(generateurAleatoire);
@@ -21,28 +24,35 @@ void Monde::mort() {
 }
 
 void Monde::affichage(bool verbose) {
-    cout << "Meilleure distance à l'optimum : " << meilleureDistance() << endl
+    int indiceMeilleur = meilleurIndividu();
+    double meilleur = individus[indiceMeilleur]->distanceToOptimal();
+    cout << "Meilleure distance à l'optimum : " << meilleur << endl
          << "Distance moyenne à l'optimum : " << distanceMoyenne() << endl
          << individus.size() << " individus : " << endl;
 
-    if (verbose)
+    if (meilleur == 0.0 && tempsMeilleur < 0 && nombreMutationMeilleur < 0) {
+        tempsMeilleur = nombreReproduction;
+        nombreMutationMeilleur = individus[indiceMeilleur]->getNombreMutation();
+        cout << "Un individu optimal vient d'apparaitre après " << tempsMeilleur << " reproduction(s)" << endl;
+        cout << "L'individu optimal a muté " << nombreMutationMeilleur << " fois" << endl;
+        individus[indiceMeilleur]->affichage();
+    }
+
+    if (verbose) {
         for (auto individu: individus)
             individu->affichage();
+        if (nombreReproduction > 0 && tempsMeilleur >= 0) {
+            cout << "Un individu optimal est apparu après " << tempsMeilleur << " reproduction(s)" << endl;
+            cout << "Il est apparu suit à " << nombreMutationMeilleur << " mutation(s)" << endl;
+        }
+        if(tempsMeilleur < 0) {
+            cout << "Aucun individu optimal n'est apparu" << endl;
+        }
+    }
 }
 
 double Monde::meilleureDistance() {
-    if (!individus.empty()) {
-        double distance = individus[0]->distanceToOptimal();
-
-        for (auto individu: individus) {
-            double temp = individu->distanceToOptimal();
-            if (temp < distance) distance = temp;
-        }
-
-        return distance;
-    }
-
-    return -1;
+    return individus[meilleurIndividu()]->distanceToOptimal();
 }
 
 double Monde::distanceMoyenne() {
@@ -109,8 +119,8 @@ int Monde::pireIndividu() {
     return -1;
 }
 
-Individu Monde::selectionReproduction() {
-    return *individus[meilleurIndividu()];
+Individu *Monde::selectionReproduction() {
+    return individus[meilleurIndividu()];
 }
 
 int Monde::selectionMort() {

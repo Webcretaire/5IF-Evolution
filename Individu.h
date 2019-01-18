@@ -11,15 +11,24 @@ class Individu {
 public:
     explicit Individu(int tailleInitiale, mt19937 &generateurAleatoire);
 
+    Individu(Individu& parent);
+
     double distanceToOptimal();
 
     void affichage();
 
     void mutation(mt19937 &generateurAleatoire);
 
+    void vieillir() { age++; }
+
+    int getNombreMutation() { return nombreMutation; }
+
 private:
     vector<int8_t> dna;
 
+    int age = 0;
+
+    int nombreMutation;
 };
 
 

@@ -24,6 +24,11 @@ private:
 
     mt19937 generateurAleatoire;
 
+    int nombreReproduction = 0;
+
+    int tempsMeilleur = -1;
+    int nombreMutationMeilleur = -1;
+
     double tauxMutation;
 
     double meilleureDistance();
@@ -34,7 +39,7 @@ private:
 
     int pireIndividu();
 
-    Individu selectionReproduction();
+    Individu *selectionReproduction();
 
     int selectionMort();
 };

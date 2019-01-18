@@ -22,13 +22,21 @@ void Individu::affichage() {
 }
 
 Individu::Individu(int tailleInitiale, mt19937 &generateurAleatoire) {
+    nombreMutation = 0;
     uniform_int_distribution<int8_t> generateurBernoulli(0, 1);
     for (int i = 0; i < tailleInitiale; i++)
         dna.push_back(generateurBernoulli(generateurAleatoire));
+}
+
+Individu::Individu(Individu &parent) {
+    dna = parent.dna;
+    nombreMutation = parent.nombreMutation;
 }
 
 void Individu::mutation(mt19937 &generateurAleatoire) {
     uniform_int_distribution<> uniforme(0, (int)dna.size()-1);
     int index = uniforme(generateurAleatoire);
     dna[index] = !dna[index];
+
+    nombreMutation++;
 }
