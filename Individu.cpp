@@ -1,6 +1,9 @@
 #include "Individu.h"
 #include <iostream>
 
+#define REPARTITION_BASE 0.5
+#define REPARTITION_MUTATION 1
+
 using namespace std;
 
 double Individu::distanceToOptimal() {
@@ -23,9 +26,9 @@ void Individu::affichage() {
 
 Individu::Individu(int tailleInitiale, mt19937 &generateurAleatoire) {
     nombreMutation = 0;
-    uniform_int_distribution<int8_t> generateurBernoulli(0, 1);
+    bernoulli_distribution bernoulli(REPARTITION_BASE);
     for (int i = 0; i < tailleInitiale; i++)
-        dna.push_back(generateurBernoulli(generateurAleatoire));
+        dna.push_back(bernoulli(generateurAleatoire));
 }
 
 Individu::Individu(Individu &parent) {
@@ -34,9 +37,15 @@ Individu::Individu(Individu &parent) {
 }
 
 void Individu::mutation(mt19937 &generateurAleatoire) {
-    uniform_int_distribution<> uniforme(0, (int)dna.size()-1);
+    uniform_int_distribution uniforme(0, (int)dna.size()-1);
+    bernoulli_distribution bernoulli_mut(REPARTITION_MUTATION);
+    bernoulli_distribution bernoulli_base(REPARTITION_BASE);
     int index = uniforme(generateurAleatoire);
-    dna[index] = !dna[index];
+    //application d'une mutation
+    if(bernoulli_mut(generateurAleatoire))
+        dna[index] = !dna[index];
+    else
+        dna.insert(dna.begin()+index, (int8_t)bernoulli_base(generateurAleatoire));
 
     nombreMutation++;
 }
