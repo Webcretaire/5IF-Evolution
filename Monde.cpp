@@ -1,6 +1,8 @@
 #include <iostream>
 #include "Monde.h"
 
+//#define SELECTION_MEILLEUR
+
 using namespace std;
 
 void Monde::reproduction() {
@@ -33,20 +35,20 @@ void Monde::affichage(bool verbose) {
     if (meilleur == 0.0 && tempsMeilleur < 0 && nombreMutationMeilleur < 0) {
         tempsMeilleur = nombreReproduction;
         nombreMutationMeilleur = individus[indiceMeilleur]->getNombreMutation();
-        cout << "Un individu optimal vient d'apparaitre après " << tempsMeilleur << " reproduction(s)" << endl;
-        cout << "L'individu optimal a muté " << nombreMutationMeilleur << " fois" << endl;
+        cout << "Un individu optimal vient d'apparaitre après " << tempsMeilleur << " reproduction(s)" << endl
+             << "L'individu optimal a muté " << nombreMutationMeilleur << " fois" << endl;
         individus[indiceMeilleur]->affichage();
     }
 
     if (verbose) {
         for (auto individu: individus)
             individu->affichage();
-        if (nombreReproduction > 0 && tempsMeilleur >= 0) {
-            cout << "Un individu optimal est apparu après " << tempsMeilleur << " reproduction(s)" << endl;
-            cout << "Il est apparu suit à " << nombreMutationMeilleur << " mutation(s)" << endl;
-        }
-        if(tempsMeilleur < 0) {
-            cout << "Aucun individu optimal n'est apparu" << endl;
+        if (nombreReproduction > 0) {
+            if (tempsMeilleur >= 0) {
+                cout << "Un individu optimal est apparu après " << tempsMeilleur << " reproduction(s)" << endl;
+                cout << "Il est apparu suit à " << nombreMutationMeilleur << " mutation(s)" << endl;
+            } else
+                cout << "Aucun individu optimal n'est apparu" << endl;
         }
     }
 }
@@ -120,7 +122,14 @@ int Monde::pireIndividu() {
 }
 
 Individu *Monde::selectionReproduction() {
+#ifdef SELECTION_MEILLEUR
     return individus[meilleurIndividu()];
+#else
+    uniform_int_distribution uniforme(0, (int)individus.size()-1);
+    int indice_elu = uniforme(generateurAleatoire);
+    cout << "l'individu sélectionné est a " << individus[indice_elu]->distanceToOptimal() << " de l'optimal" << endl;
+    return individus[indice_elu];
+#endif //SELECTION_MEILLEUR
 }
 
 int Monde::selectionMort() {
